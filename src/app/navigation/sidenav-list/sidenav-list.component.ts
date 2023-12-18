@@ -14,6 +14,11 @@ export class SidenavListComponent implements OnInit {
 
   constructor(private authService: AuthService) { }
 
+  onLogout() {
+    this.onClose();
+    this.authService.logout();
+  }
+
   ngOnDestroy() {
     this.authSubscription.unsubscribe();
   }
