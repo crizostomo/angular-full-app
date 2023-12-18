@@ -18,6 +18,7 @@ import { PastTrainingsComponent } from './training/past-trainings/past-trainings
 import { TrainingComponent } from './training/training.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { AuthService } from './auth/auth.service';
+import { TrainingService } from './training/training.service';
 
 
 @NgModule({
@@ -43,7 +44,7 @@ import { AuthService } from './auth/auth.service';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [AuthService],
+  providers: [AuthService, TrainingService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
