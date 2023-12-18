@@ -40,8 +40,8 @@ export class AuthService {
     return { ... this.user };
   }
 
-  isAuth() {
-    return this.user !== null;
+  isAuth(): boolean {
+    return Boolean (this.user);
   }
 
   private authSuccess() {
