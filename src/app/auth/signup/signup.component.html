@@ -8,7 +8,7 @@
     <mat-form-field hintLabel="Should be at least 6 characters long.">
       <input type="password" matInput placeholder="Your password" ngModel name="password" required minlength="6" #pwInput="ngModel">
       <mat-hint align="end">{{ pwInput.value?.length }} / 6</mat-hint>
-      <mat-error>Has to be at least 6 characters long.</mat-error>
+      <mat-error>It needs to be at least 6 characters long.</mat-error>
     </mat-form-field>
     <mat-form-field>
       <input matInput placeholder="Your birthdate" [matDatepicker]="picker" [max]="maxDate" ngModel name="birthdate" required>
