@@ -30,5 +30,9 @@ export class TrainingService {
     }
   }
 
+  getRuningExercise() {
+    return { ...this.runningExercise };
+  }
+
   constructor() { }
 }
