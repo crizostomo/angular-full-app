@@ -11,7 +11,8 @@ import { Router } from '@angular/router';
 export class AuthService {
 
   authChange = new Subject<boolean>();
-  private user!: User | null;
+  //private user!: User | null;
+  private isAuthenticated = false;
 
   constructor(
     private router: Router,
@@ -55,20 +56,23 @@ export class AuthService {
   }
 
   logout() {
-    this.user = null;
+    //this.user = null;
     this.authChange.next(false);
     this.router.navigate(['/login']);
+    this.isAuthenticated = false;
   }
 
-  getUser() {
-    return { ... this.user };
-  }
+  //getUser() {
+  //  return { ... this.user };
+  //}
 
   isAuth(): boolean {
-    return Boolean (this.user);
+    //return Boolean (this.user);
+    return this.isAuthenticated;
   }
 
   private authSuccess() {
+    this.isAuthenticated = true;
     this.authChange.next(true);
     this.router.navigate(['/training']);
   }
