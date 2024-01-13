@@ -49,6 +49,7 @@ export class TrainingService {
   }
 
   startExercise(selectedId: string) {
+    //this.db.doc('availableExercises/' + selectedId).update({lastSelected: new Date()}) // delete, set, update a single document
     const selectedExercise = this.availableExercises.find(
       (ex) => ex.id === selectedId
     );
