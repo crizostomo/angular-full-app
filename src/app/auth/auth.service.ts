@@ -21,6 +21,22 @@ export class AuthService {
     private trainingService: TrainingService
     ) { }
 
+
+  initAuthListener() {
+    this.angularFireAuth.authState.subscribe(user => {
+      if (user) {
+        this.isAuthenticated = true;
+        this.authChange.next(true);
+        this.router.navigate(['/training']);
+      } else {
+        this.trainingService.cancelSubscriptions();
+        this.authChange.next(false);
+        this.router.navigate(['/login']);
+        this.isAuthenticated = false;
+      }
+    });
+  }
+
   registerUser(authData: AuthData) {
       // To register without the need of using AngularFireAuth
       //this.user = {
@@ -32,10 +48,9 @@ export class AuthService {
         authData.password
         ).then(response => {
           console.log(response);
-          this.authSuccess();
+          //this.authSuccess();
         })
         .catch(error => {console.log(error);});
-
       //this.authSuccess();
   }
 
@@ -50,7 +65,7 @@ export class AuthService {
       authData.password
       ).then(response => {
         console.log(response);
-        this.authSuccess();
+        //this.authSuccess();
       })
       .catch(error => {console.log(error);});
 
@@ -59,11 +74,8 @@ export class AuthService {
 
   logout() {
     //this.user = null;
-    this.trainingService.cancelSubscriptions();
     this.angularFireAuth.signOut();
-    this.authChange.next(false);
-    this.router.navigate(['/login']);
-    this.isAuthenticated = false;
+
   }
 
   //getUser() {
@@ -75,10 +87,10 @@ export class AuthService {
     return this.isAuthenticated;
   }
 
-  private authSuccess() {
-    this.isAuthenticated = true;
-    this.authChange.next(true);
-    this.router.navigate(['/training']);
-  }
+  //private authSuccess() {
+  //  this.isAuthenticated = true;
+  //  this.authChange.next(true);
+  //  this.router.navigate(['/training']);
+  //}
 
 }
