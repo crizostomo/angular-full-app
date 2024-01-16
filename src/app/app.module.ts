@@ -22,6 +22,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { AuthService } from './auth/auth.service';
 import { TrainingService } from './training/training.service';
 import { environment } from 'src/environments/environment';
+import { UIService } from './shared/ui.service';
 
 
 @NgModule({
@@ -49,7 +50,7 @@ import { environment } from 'src/environments/environment';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule
   ],
-  providers: [AuthService, TrainingService],
+  providers: [AuthService, TrainingService, UIService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

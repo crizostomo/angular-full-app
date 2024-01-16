@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { TrainingService } from '../training/training.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UIService } from '../shared/ui.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class AuthService {
     private router: Router,
     private angularFireAuth: AngularFireAuth,
     private trainingService: TrainingService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private uiService: UIService
     ) { }
 
 
@@ -45,15 +47,18 @@ export class AuthService {
       //  email: authData.email,
       //  userId: Math.round(Math.random() * 10000).toString()
       //};
+      this.uiService.loadingStateChanged.next(true);
       this.angularFireAuth.createUserWithEmailAndPassword(
         authData.email,
         authData.password
         ).then(response => {
+          this.uiService.loadingStateChanged.next(false);
           console.log(response);
           //this.authSuccess();
         })
         .catch(error => {
           //console.log(error);
+          this.uiService.loadingStateChanged.next(false);
           this.snackbar.open(error.message, undefined, {duration: 2000});
         });
       //this.authSuccess();
@@ -65,15 +70,18 @@ export class AuthService {
     //  email: authData.email,
     //  userId: Math.round(Math.random() * 10000).toString()
     //};
+    this.uiService.loadingStateChanged.next(true);
     this.angularFireAuth.signInWithEmailAndPassword(
       authData.email,
       authData.password
       ).then(response => {
+        this.uiService.loadingStateChanged.next(false);
         console.log(response);
         //this.authSuccess();
       })
       .catch(error => {
         //console.log(error);
+        this.uiService.loadingStateChanged.next(false);
         this.snackbar.open(error.message, undefined, {duration: 2000});
       });
     //this.authSuccess();
