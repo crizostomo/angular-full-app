@@ -3,6 +3,7 @@ import { Exercise } from './exercise.model';
 import { Subject, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map } from 'rxjs';
+import { UIService } from '../shared/ui.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,10 @@ export class TrainingService {
   //private finishedExercises: Exercise[] = [];
   private firebaseSubscription: Subscription[] = [];
 
-  constructor(private db: AngularFirestore) {}
+  constructor(
+    private db: AngularFirestore,
+    private uiService: UIService
+    ) {}
 
   getAvailableExerces() {
     //return this.availableExercises.slice(); //slice creates a real copy
@@ -100,6 +104,7 @@ export class TrainingService {
 
   getCompletedOrCancelledExercises() {
     //return this.finishedExercises.slice(); //slice to get a new copy
+    this.uiService.loadingStateChanged.next(true);
     this.firebaseSubscription.push(this.db
       .collection('finishedExercises')
       .valueChanges()
@@ -107,6 +112,7 @@ export class TrainingService {
         map((exercises: unknown[]) => exercises as Exercise[])
       )
       .subscribe((exercises: Exercise[]) => {
+        this.uiService.loadingStateChanged.next(false);
         this.finishedExercisesChanged.next(exercises);
       }
       //, error => {
