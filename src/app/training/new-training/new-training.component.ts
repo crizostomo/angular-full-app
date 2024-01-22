@@ -57,11 +57,15 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
       //this.isLoading = false; // 1st approach to load the spinner when loading the exercises. Point when we load the exercises
       this.exercises = exercises
     });
-    this.trainingService.getAvailableExerces();
+    this.fetchExercises();
   }
 
   onStartTraining(form: NgForm) {
     this.trainingService.startExercise(form.value.exercise);
+  }
+
+  fetchExercises() {
+    this.trainingService.getAvailableExerces();
   }
 
   ngOnDestroy() {
