@@ -8,8 +8,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './auth/login/login.component';
-import { SignupComponent } from './auth/signup/signup.component';
 import { MaterialModule } from './material.module';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
@@ -23,13 +21,12 @@ import { AuthService } from './auth/auth.service';
 import { TrainingService } from './training/training.service';
 import { environment } from 'src/environments/environment';
 import { UIService } from './shared/ui.service';
+import { AuthModule } from './auth/auth.module';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignupComponent,
-    LoginComponent,
     TrainingComponent,
     CurrentTrainingComponent,
     NewTrainingComponent,
@@ -48,7 +45,8 @@ import { UIService } from './shared/ui.service';
     FormsModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    AuthModule
   ],
   providers: [AuthService, TrainingService, UIService],
   bootstrap: [AppComponent],

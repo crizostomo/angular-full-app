@@ -16,6 +16,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 - ng add @angular/fire
 - select firestore and authentication with space, and click enter to continue, select your project and your app.
 - in your environment file add (you get it from Firebase - general project vision): 
+- To access firebase: https://console.firebase.google.com/
 
 const firebaseConfig = {
   apiKey: <your-value>,
