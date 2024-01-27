@@ -69,7 +69,11 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.exerciseSubscription.unsubscribe();
-    this.loadingSubscription.unsubscribe(); // For the 2nd approach to load the spinner when loading the exercises
+    if (this.exerciseSubscription) {
+      this.exerciseSubscription.unsubscribe();
+    }
+    if (this.loadingSubscription) {
+      this.loadingSubscription.unsubscribe();
+    } // For the 2nd approach to load the spinner when loading the exercises
   }
 }
