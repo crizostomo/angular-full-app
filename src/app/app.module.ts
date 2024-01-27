@@ -35,8 +35,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
     FormsModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AuthModule,
-    TrainingModule
+    AuthModule
   ],
   providers: [AuthService, TrainingService, UIService],
   bootstrap: [AppComponent],
