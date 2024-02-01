@@ -5,7 +5,7 @@ import { AuthService } from '../auth.service';
 import { UIService } from 'src/app/shared/ui.service';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { State } from 'src/app/app.reducer';
+import { State, getIsLoading } from 'src/app/app.reducer';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs';
 
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
     /**
     * ADDED LINE BELOW TO WORK WITH NgRx
     */
-    this.isLoading$ = this.store.pipe(map(state => state.ui.isLoading));
+    this.isLoading$ = this.store.select(getIsLoading);
     //this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(isLoading => {
     //  this.isLoading = isLoading;
     //});
