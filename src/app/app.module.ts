@@ -17,6 +17,8 @@ import { UIService } from './shared/ui.service';
 import { TrainingModule } from './training/training.module';
 import { TrainingService } from './training/training.service';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { StoreModule } from '@ngrx/store';
+import { appReducer } from './app.reducer';
 
 
 @NgModule({
@@ -35,7 +37,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
     FormsModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AuthModule
+    AuthModule,
+    StoreModule.forRoot({ui: appReducer})
   ],
   providers: [AuthService, TrainingService, UIService],
   bootstrap: [AppComponent],

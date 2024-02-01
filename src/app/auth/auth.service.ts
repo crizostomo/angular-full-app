@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { TrainingService } from '../training/training.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UIService } from '../shared/ui.service';
+import { Store } from '@ngrx/store';
+import { State } from '../app.reducer';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +24,8 @@ export class AuthService {
     private angularFireAuth: AngularFireAuth,
     private trainingService: TrainingService,
     //private snackbar: MatSnackBar,
-    private uiService: UIService
+    private uiService: UIService,
+    private store: Store<{ui: State}>
     ) { }
 
 
@@ -47,18 +50,24 @@ export class AuthService {
       //  email: authData.email,
       //  userId: Math.round(Math.random() * 10000).toString()
       //};
-      this.uiService.loadingStateChanged.next(true);
+      /**
+       * COMMENTING LINE BELOW TO WORK WITH NgRx, UNCOMMENT TO KEEP LOCALLY + FIREBASE
+       */
+      //this.uiService.loadingStateChanged.next(true);
+      this.store.dispatch({type: 'START_LOADING'});
       this.angularFireAuth.createUserWithEmailAndPassword(
         authData.email,
         authData.password
         ).then(response => {
-          this.uiService.loadingStateChanged.next(false);
+          //this.uiService.loadingStateChanged.next(false);
+          this.store.dispatch({type: 'STOP_LOADING'});
           console.log(response);
           //this.authSuccess();
         })
         .catch(error => {
           //console.log(error);
-          this.uiService.loadingStateChanged.next(false);
+          //this.uiService.loadingStateChanged.next(false);
+          this.store.dispatch({type: 'STOP_LOADING'});
           this.uiService.showSnackbar(error.message, undefined, 2000);
           //this.snackbar.open(error.message, undefined, {duration: 2000});
         });
@@ -71,18 +80,24 @@ export class AuthService {
     //  email: authData.email,
     //  userId: Math.round(Math.random() * 10000).toString()
     //};
-    this.uiService.loadingStateChanged.next(true);
+    /**
+    * COMMENTING LINE BELOW TO WORK WITH NgRx, UNCOMMENT TO KEEP LOCALLY + FIREBASE
+    */
+    //this.uiService.loadingStateChanged.next(true);
+    this.store.dispatch({type: 'START_LOADING'});
     this.angularFireAuth.signInWithEmailAndPassword(
       authData.email,
       authData.password
       ).then(response => {
-        this.uiService.loadingStateChanged.next(false);
+        //this.uiService.loadingStateChanged.next(false);
+        this.store.dispatch({type: 'STOP_LOADING'});
         console.log(response);
         //this.authSuccess();
       })
       .catch(error => {
         //console.log(error);
-        this.uiService.loadingStateChanged.next(false);
+        //this.uiService.loadingStateChanged.next(false);
+        this.store.dispatch({type: 'STOP_LOADING'});
         this.uiService.showSnackbar(error.message, undefined, 2000);
         //this.snackbar.open(error.message, undefined, {duration: 2000});
       });
