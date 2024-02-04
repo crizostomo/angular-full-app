@@ -4,6 +4,9 @@ import { Subject, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map } from 'rxjs';
 import { UIService } from '../shared/ui.service';
+import * as UI from '../shared/ui.actions';
+import * as fromRoot from '../app.reducer';
+import { Store } from '@ngrx/store';
 
 @Injectable({
   providedIn: 'root',
@@ -25,12 +28,14 @@ export class TrainingService {
 
   constructor(
     private db: AngularFirestore,
-    private uiService: UIService
+    private uiService: UIService,
+    private store: Store<fromRoot.State>
     ) {}
 
   getAvailableExerces() {
     //return this.availableExercises.slice(); //slice creates a real copy
-
+    //this.uiService.loadingStateChanged.next(true);
+    this.store.dispatch(new UI.StartLoading());
     this.firebaseSubscription.push(this.db
       .collection('availableExercises')
       //.valueChanges()
@@ -48,11 +53,12 @@ export class TrainingService {
       )
       .subscribe((exercises: Exercise[]) => {
         console.log(exercises);
+        this.store.dispatch(new UI.StopLoading());
         this.availableExercises = exercises;
         this.exercisesChanged.next([...this.availableExercises]);
       }
       , error => {
-        this.uiService.loadingStateChanged.next(false);
+        this.store.dispatch(new UI.StopLoading());
         this.uiService.showSnackbar('Fetching exercises failed, please try again later', undefined, 2000);
         this.exercisesChanged.next(null);
         //console.log(error);
@@ -107,7 +113,7 @@ export class TrainingService {
 
   getCompletedOrCancelledExercises() {
     //return this.finishedExercises.slice(); //slice to get a new copy
-    this.uiService.loadingStateChanged.next(true);
+    this.store.dispatch(new UI.StartLoading());
     this.firebaseSubscription.push(this.db
       .collection('finishedExercises')
       .valueChanges()
@@ -115,7 +121,7 @@ export class TrainingService {
         map((exercises: unknown[]) => exercises as Exercise[])
       )
       .subscribe((exercises: Exercise[]) => {
-        this.uiService.loadingStateChanged.next(false);
+        this.store.dispatch(new UI.StopLoading());
         this.finishedExercisesChanged.next(exercises);
       }
       //, error => {

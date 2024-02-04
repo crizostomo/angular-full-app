@@ -17,7 +17,7 @@ import { map } from 'rxjs';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   isLoading$!: Observable<boolean>; //false;
-  private loadingSubscription!: Subscription;
+  //private loadingSubscription!: Subscription;
 
   constructor(
     private authService: AuthService,
