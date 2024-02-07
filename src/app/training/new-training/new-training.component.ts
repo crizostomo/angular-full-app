@@ -1,3 +1,4 @@
+import { getAvailableExercises } from './../training.reducer';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TrainingService } from '../training.service';
 import { Exercise } from '../exercise.model';
@@ -7,6 +8,7 @@ import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs';
 import { UIService } from 'src/app/shared/ui.service';
 import * as fromRoot from '../../app.reducer'
+import * as fromTraining from '../training.reducer'
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -14,17 +16,17 @@ import { Store } from '@ngrx/store';
   templateUrl: './new-training.component.html',
   styleUrls: ['./new-training.component.css'],
 })
-export class NewTrainingComponent implements OnInit, OnDestroy {
+export class NewTrainingComponent implements OnInit {
   //exercises!: Observable<Exercise[]>;
-  exercises!: Exercise[] | null;
-  private exerciseSubscription!: Subscription;
+  exercises$!: Observable<Exercise[] | null>;
+  //private exerciseSubscription!: Subscription;
   isLoading$!: Observable<boolean>;
   //private loadingSubscription!: Subscription; // For the 2nd approach to load the spinner when loading the exercises
 
   constructor(
     private trainingService: TrainingService,
     private uiService: UIService, // For the 2nd approach to load the spinner when loading the exercises
-    private store: Store<fromRoot.State>
+    private store: Store<fromTraining .State>
     //private db: AngularFirestore
   ) {}
 
@@ -61,10 +63,11 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
     //  }
     //); // For the 2nd approach to load the spinner when loading the exercises
     this.isLoading$ = this.store.select(fromRoot.getIsLoading);
-    this.exerciseSubscription = this.trainingService.exercisesChanged.subscribe(exercises => {
-      //this.isLoading = false; // 1st approach to load the spinner when loading the exercises. Point when we load the exercises
-      this.exercises = exercises
-    });
+    //this.exerciseSubscription = this.trainingService.exercisesChanged.subscribe(exercises => {
+    //  //this.isLoading = false; // 1st approach to load the spinner when loading the exercises. Point when we load the exercises
+    //  this.exercises = exercises
+    //});
+    this.exercises$ = this.store.select(fromTraining.getAvailableExercises);
     this.fetchExercises();
   }
 
@@ -76,12 +79,12 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
     this.trainingService.getAvailableExerces();
   }
 
-  ngOnDestroy() {
-    if (this.exerciseSubscription) {
-      this.exerciseSubscription.unsubscribe();
-    }
+  //ngOnDestroy() {
+  //  if (this.exerciseSubscription) {
+  //    this.exerciseSubscription.unsubscribe();
+  //  }
     //if (this.loadingSubscription) {
     //  this.loadingSubscription.unsubscribe();
     //} // For the 2nd approach to load the spinner when loading the exercises
-  }
+  //}
 }
