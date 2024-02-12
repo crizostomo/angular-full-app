@@ -6,9 +6,39 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## How to Set Firebase?
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Create an account on https://firebase.google.com/
+- Create a Firebase Database and a Collection, e.g. 'availableExercises'
+- Add your values, e.g. [calories: 15 (number), duration: 180 (number), name: "Touch Toes" (string)]
+- npm i -g firebase-tools
+- firebase login (log in  with your firebase credentials)
+- ng add @angular/fire
+- select firestore and authentication with space, and click enter to continue, select your project and your app.
+- in your environment file add (you get it from Firebase - general project vision): 
+- To access firebase: https://console.firebase.google.com/
+
+const firebaseConfig = {
+  apiKey: <your-value>,
+  authDomain: <your-value>,
+  databaseURL: <your-value>,
+  projectId: <your-value>,
+  storageBucket: <your-value>,
+  messagingSenderId: <your-value>,
+  appId: <your-value>,
+  measurementId: <your-value>,
+};
+
+### How to import Firebase AngularFireModule and AngularFireAuthModule in your app.module?
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+
+  imports: [
+    ...,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule
+  ],
+
 
 ## Build
 
