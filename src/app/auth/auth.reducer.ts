@@ -1,12 +1,13 @@
-import { Action } from "@ngrx/store";
-import { AuthActions, SET_AUTHENTICATED, SET_UNAUTHENTICATED } from "./auth.actions";
+import { Action } from '@ngrx/store';
+
+import { AuthActions, SET_AUTHENTICATED, SET_UNAUTHENTICATED } from './auth.actions';
 
 export interface State {
   isAuthenticated: boolean;
 }
 
 const initialState: State = {
-  isAuthenticated: false,
+  isAuthenticated: false
 };
 
 export function authReducer(state = initialState, action: AuthActions | Action) {
@@ -19,9 +20,10 @@ export function authReducer(state = initialState, action: AuthActions | Action) 
       return {
         isAuthenticated: false
       };
-    default:
+    default: {
       return state;
-  };
+    }
+  }
 }
 
 export const getIsAuth = (state: State) => state.isAuthenticated;

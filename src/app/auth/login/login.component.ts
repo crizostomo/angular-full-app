@@ -1,13 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 
 import { AuthService } from '../auth.service';
-import { UIService } from 'src/app/shared/ui.service';
-import { Subscription } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { State, getIsLoading } from 'src/app/app.reducer';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs';
+import { UIService } from '../../shared/ui.service';
+import * as fromRoot from '../../app.reducer';
 
 @Component({
   selector: 'app-login',
@@ -16,23 +15,21 @@ import { map } from 'rxjs';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-  isLoading$!: Observable<boolean>; //false;
-  //private loadingSubscription!: Subscription;
+  isLoading$!: Observable<boolean>;
 
   constructor(
     private authService: AuthService,
     private uiService: UIService,
-    private store: Store<{ui: State}>
-    ) {}
+    private store: Store<fromRoot.State>
+  ) {}
 
   ngOnInit() {
-    /**
-    * ADDED LINE BELOW TO WORK WITH NgRx
-    */
-    this.isLoading$ = this.store.select(getIsLoading);
-    //this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(isLoading => {
-    //  this.isLoading = isLoading;
-    //});
+    this.isLoading$ = this.store.select(fromRoot.getIsLoading);
+    // this.loadingSubs = this.uiService.loadingStateChanged.subscribe(
+    //   isLoading => {
+    //     this.isLoading = isLoading;
+    //   }
+    // );
     this.loginForm = new FormGroup({
       email: new FormControl('', {
         validators: [Validators.required, Validators.email]
@@ -41,20 +38,16 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  /**
-  * COMMENTED LINE BELOW TO WORK WITH NgRx
-  */
-  //ngOnDestroy() {
-  //  if (this.loadingSubscription) {
-  //    this.loadingSubscription.unsubscribe();
-  //  }
-  //}
-
-
   onSubmit() {
     this.authService.login({
       email: this.loginForm.value.email,
       password: this.loginForm.value.password
     });
   }
+
+  // ngOnDestroy() {
+  //   if (this.loadingSubs) {
+  //     this.loadingSubs.unsubscribe();
+  //   }
+  // }
 }

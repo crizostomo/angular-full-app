@@ -1,132 +1,72 @@
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Store } from '@ngrx/store';
+
 import { User } from './user.model';
 import { AuthData } from './auth-data.model';
-import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
 import { TrainingService } from '../training/training.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { UIService } from '../shared/ui.service';
-import { Store } from '@ngrx/store';
-import { State } from '../app.reducer';
+import * as fromRoot from '../app.reducer';
 import * as UI from '../shared/ui.actions';
-import * as Auth from '../auth/auth.actions';
+import * as Auth from './auth.actions';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AuthService {
-
-  //authChange = new Subject<boolean>();
-  //private user!: User | null;
-  //private isAuthenticated = false;
-
   constructor(
     private router: Router,
-    private angularFireAuth: AngularFireAuth,
+    private afAuth: AngularFireAuth,
     private trainingService: TrainingService,
-    //private snackbar: MatSnackBar,
     private uiService: UIService,
-    private store: Store<{ui: State}>
-    ) { }
-
+    private store: Store<fromRoot.State>
+  ) {}
 
   initAuthListener() {
-    this.angularFireAuth.authState.subscribe(user => {
+    this.afAuth.authState.subscribe(user => {
       if (user) {
-        //this.isAuthenticated = true;
-        //this.authChange.next(true);
         this.store.dispatch(new Auth.SetAuthenticated());
         this.router.navigate(['/training']);
       } else {
         this.trainingService.cancelSubscriptions();
-        //this.authChange.next(false);
         this.store.dispatch(new Auth.SetUnauthenticated());
         this.router.navigate(['/login']);
-        //this.isAuthenticated = false;
       }
     });
   }
 
   registerUser(authData: AuthData) {
-      // To register without the need of using AngularFireAuth
-      //this.user = {
-      //  email: authData.email,
-      //  userId: Math.round(Math.random() * 10000).toString()
-      //};
-      /**
-       * COMMENTING LINE BELOW TO WORK WITH NgRx, UNCOMMENT TO KEEP LOCALLY + FIREBASE
-       */
-      //this.uiService.loadingStateChanged.next(true);
-      this.store.dispatch(new UI.StartLoading());
-      this.angularFireAuth.createUserWithEmailAndPassword(
-        authData.email,
-        authData.password
-        ).then(response => {
-          //this.uiService.loadingStateChanged.next(false);
-          this.store.dispatch(new UI.StopLoading());
-          console.log(response);
-          //this.authSuccess();
-        })
-        .catch(error => {
-          //console.log(error);
-          //this.uiService.loadingStateChanged.next(false);
-          this.store.dispatch(new UI.StopLoading());
-          this.uiService.showSnackbar(error.message, undefined, 2000);
-          //this.snackbar.open(error.message, undefined, {duration: 2000});
-        });
-      //this.authSuccess();
+    // this.uiService.loadingStateChanged.next(true);
+    this.store.dispatch(new UI.StartLoading());
+    this.afAuth
+      .createUserWithEmailAndPassword(authData.email, authData.password)
+      .then(result => {
+        // this.uiService.loadingStateChanged.next(false);
+        this.store.dispatch(new UI.StopLoading());
+      })
+      .catch(error => {
+        // this.uiService.loadingStateChanged.next(false);
+        this.store.dispatch(new UI.StopLoading());
+        this.uiService.showSnackbar(error.message, undefined, 3000);
+      });
   }
 
   login(authData: AuthData) {
-    // To log in without the need of using AngularFireAuth
-    //this.user = {
-    //  email: authData.email,
-    //  userId: Math.round(Math.random() * 10000).toString()
-    //};
-    /**
-    * COMMENTING LINE BELOW TO WORK WITH NgRx, UNCOMMENT TO KEEP LOCALLY + FIREBASE
-    */
-    //this.uiService.loadingStateChanged.next(true);
+    // this.uiService.loadingStateChanged.next(true);
     this.store.dispatch(new UI.StartLoading());
-    this.angularFireAuth.signInWithEmailAndPassword(
-      authData.email,
-      authData.password
-      ).then(response => {
-        //this.uiService.loadingStateChanged.next(false);
+    this.afAuth
+      .signInWithEmailAndPassword(authData.email, authData.password)
+      .then(result => {
+        // this.uiService.loadingStateChanged.next(false);
         this.store.dispatch(new UI.StopLoading());
-        console.log(response);
-        //this.authSuccess();
       })
       .catch(error => {
-        //console.log(error);
-        //this.uiService.loadingStateChanged.next(false);
+        // this.uiService.loadingStateChanged.next(false);
         this.store.dispatch(new UI.StopLoading());
-        this.uiService.showSnackbar(error.message, undefined, 2000);
-        //this.snackbar.open(error.message, undefined, {duration: 2000});
+        this.uiService.showSnackbar(error.message, undefined, 3000);
       });
-    //this.authSuccess();
   }
 
   logout() {
-    //this.user = null;
-    this.angularFireAuth.signOut();
-
+    this.afAuth.signOut();
   }
-
-  //getUser() {
-  //  return { ... this.user };
-  //}
-
-  //isAuth(): boolean {
-    //return Boolean (this.user);
-  //  return this.isAuthenticated;
-  //}
-
-  //private authSuccess() {
-  //  this.isAuthenticated = true;
-  //  this.authChange.next(true);
-  //  this.router.navigate(['/training']);
-  //}
-
 }
