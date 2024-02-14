@@ -12,4 +12,5 @@ export const environment = {
   }
 };
 
-// ng build --prod
+// ng build --configuration production
+
